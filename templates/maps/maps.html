@@ -1,0 +1,35 @@
+{{ template "include/layout.html" . }}
+
+{{ define "content" }}
+	<h1>
+		{{ .title }}
+	</h1>
+	<table>
+    <tr>
+        <th>id</th>
+        <th>difficulty</th>
+        <th>map name</th>
+        <th>korean name</th>
+        <th>chinese name</th>
+        <th>tierpro</th>
+        <th>tier1</th>
+        <th>tier2</th>
+        <th>tier3</th>
+        <th>tier4</th>
+    </tr>
+    {{ range $m := .maps }}
+    <tr>
+        <td>{{ $m.ID }}</td>
+        <td>{{ $m.Difficulty }}</td>
+        <td>{{ $m.MapName }}</td>
+        <td>{{ $m.KoreanName }}</td>
+        <td>{{ $m.ChineseName }}</td>
+        <td>{{ $m.Tierpro }}</td>
+        <td>{{ $m.Tier1 }}</td>
+        <td>{{ $m.Tier2 }}</td>
+        <td>{{ $m.Tier3 }}</td>
+        <td>{{ $m.Tier4 }}</td>
+    </tr>
+    {{ end }}
+	</table>
+{{ end }}

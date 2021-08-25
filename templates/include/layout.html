@@ -1,0 +1,23 @@
+{{define "include/layout.html"}}
+<!DOCTYPE html>
+<html>
+<title>{{ block "title" . }}{{ end }}- mapinfo </title>
+<!-- <link rel="stylesheet" href="">  TODO: css -->
+
+<nav>
+    <!-- TODO: login/logout/register part -->
+</nav>
+
+
+<section class="content">
+    <header>
+        {{ block "header" . }} {{ end }}
+    </header>
+    
+    <!-- TODO: error message -->
+
+    {{ block "content" . }} {{ end }}
+</section>
+
+</html>
+{{end}}
