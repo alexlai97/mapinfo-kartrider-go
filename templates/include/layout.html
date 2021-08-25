@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <title>{{ block "title" . }}{{ end }}- mapinfo </title>
-<!-- <link rel="stylesheet" href="">  TODO: css -->
+<!-- <link rel="stylesheet" href="">   -->
 
 <nav>
     <!-- TODO: login/logout/register part -->
@@ -16,7 +16,8 @@
     
     <!-- TODO: error message -->
 
-    {{ block "content" . }} {{ end }}
+    <!-- FIXME: change "fun" to a better name, find out why "content" doesn't work -->
+    {{ block "fun" . }} {{ end }} 
 </section>
 
 </html>

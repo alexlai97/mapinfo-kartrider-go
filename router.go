@@ -20,6 +20,7 @@ func initRoutingScheme() {
 
 	// load templates
 	r.LoadHTMLGlob("templates/**/*.html")
+	// r.Static("/assets", "./assets")
 
 	r.GET("/", routingToAllMaps)
 
