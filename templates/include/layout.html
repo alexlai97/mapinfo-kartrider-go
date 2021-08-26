@@ -1,8 +1,8 @@
 {{define "include/layout.html"}}
 <!DOCTYPE html>
 <html>
-<title>{{ block "title" . }}{{ end }}- mapinfo </title>
-<!-- <link rel="stylesheet" href="">   -->
+<title>{{ block "title" . }}{{ end }} - mapinfo </title>
+<!-- <link rel="stylesheet" href="/assets/style.css">   -->
 
 <nav>
     <!-- TODO: login/logout/register part -->
@@ -16,8 +16,7 @@
     
     <!-- TODO: error message -->
 
-    <!-- FIXME: change "fun" to a better name, find out why "content" doesn't work -->
-    {{ block "fun" . }} {{ end }} 
+    {{ block "content" . }} {{ end }} 
 </section>
 
 </html>

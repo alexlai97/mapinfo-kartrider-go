@@ -5,6 +5,7 @@ import (
 
 	// "github.com/stnc/pongo4gin"
 	// "github.com/flosch/pongo2"
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 
 	"strconv"
@@ -13,6 +14,14 @@ import (
 // pointer to gin.Engine
 var router *gin.Engine
 
+// FIXME: doesn't work
+func loadTemplates() multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromFiles("allmaps", "templates/include/layout.html", "templates/maps/maps.html")
+	r.AddFromFiles("singlemap", "templates/include/layout.html", "templates/maps/singlemap.html")
+	return r
+}
+
 // setup routing scheme
 func initRoutingScheme() {
 	r := gin.Default()
@@ -20,10 +29,11 @@ func initRoutingScheme() {
 
 	// load templates
 	r.LoadHTMLGlob("templates/**/*.html")
-	// r.Static("/assets", "./assets")
+	// r.HTMLRender = loadTemplates() // FIXME: doesn't work
 
-	r.GET("/", routingToAllMaps)
+	r.Static("/assets", "./assets")
 
+	// json
 	group_v1 := r.Group("api/v1/maps")
 	{
 		group_v1.GET("/", func(c *gin.Context) {
@@ -38,6 +48,8 @@ func initRoutingScheme() {
 		})
 	}
 
+	// html
+	r.GET("/", routingToAllMaps)
 	group_map := r.Group("maps")
 	{
 		group_map.GET("/", routingToAllMaps)
