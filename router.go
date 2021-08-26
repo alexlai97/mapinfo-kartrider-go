@@ -3,8 +3,6 @@ package main
 import (
 	"net/http"
 
-	// "github.com/stnc/pongo4gin"
-	// "github.com/flosch/pongo2"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 
@@ -14,11 +12,13 @@ import (
 // pointer to gin.Engine
 var router *gin.Engine
 
-// FIXME: doesn't work
-func loadTemplates() multitemplate.Renderer {
+// custom load templates function
+func loadTemplates(templateDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
-	r.AddFromFiles("allmaps", "templates/include/layout.html", "templates/maps/maps.html")
-	r.AddFromFiles("singlemap", "templates/include/layout.html", "templates/maps/singlemap.html")
+
+	r.AddFromFiles("allmaps", templateDir+"/layouts/base.html", templateDir+"/includes/maps.html")
+	r.AddFromFiles("singlemap", templateDir+"/layouts/base.html", templateDir+"/includes/singlemap.html")
+
 	return r
 }
 
@@ -28,8 +28,7 @@ func initRoutingScheme() {
 	router = r // set global variable
 
 	// load templates
-	r.LoadHTMLGlob("templates/**/*.html")
-	// r.HTMLRender = loadTemplates() // FIXME: doesn't work
+	r.HTMLRender = loadTemplates("./templates")
 
 	r.Static("/assets", "./assets")
 
@@ -60,7 +59,7 @@ func initRoutingScheme() {
 				c.String(http.StatusNotAcceptable, err.Error())
 			}
 
-			c.HTML(http.StatusOK, "singlemap.html", gin.H{
+			c.HTML(http.StatusOK, "singlemap", gin.H{
 				"title":   "Single map",
 				"details": getSingleMapFromDB(id),
 			})
@@ -76,7 +75,7 @@ func serveRouter(ipaddr string) {
 
 // show all maps
 func routingToAllMaps(c *gin.Context) {
-	c.HTML(http.StatusOK, "maps.html", gin.H{
+	c.HTML(http.StatusOK, "allmaps", gin.H{
 		"title": "Maps",
 		"maps":  getAllMapsFromDB(),
 	})
