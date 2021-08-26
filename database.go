@@ -11,7 +11,7 @@ import (
 )
 
 // sqlite3 file for database
-const DATABASE_FILE = "./instance/db.sqlite3"
+const DATABASE_FILE = "db.sqlite3"
 
 // json file for map details
 const MAPS_JSON_FILE = "./model/maps.json"
@@ -50,7 +50,7 @@ type Maps struct {
 
 // Map contains all information for a certain map
 type Map struct {
-	ID          string `gorm:"primaryKey" json:"id"`
+	ID          uint   `gorm:"primaryKey" json:"id"`
 	MapName     string `json:"mapname"`
 	KoreanName  string `json:"koreanname"`
 	ChineseName string `json:"chinesename"`
@@ -84,6 +84,7 @@ func getMapsFromJsonFile(filename string) (maps Maps) {
 
 // insert the defail json map file into database
 func insertDefaultMapsToDB() {
+	GetDB().AutoMigrate(&Map{})
 	maps := getMapsFromJsonFile(MAPS_JSON_FILE)
 	for _, m := range maps.Maps {
 		GetDB().Create(&m)
