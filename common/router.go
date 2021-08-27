@@ -1,4 +1,4 @@
-package main
+package common
 
 import (
 	"net/http"
@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"strconv"
+
+	"github.com/alexlai97/mapinfo-kartrider/model"
 )
 
 // pointer to gin.Engine
@@ -23,7 +25,7 @@ func loadTemplates(templateDir string) multitemplate.Renderer {
 }
 
 // setup routing scheme
-func initRoutingScheme() {
+func InitRoutingScheme() {
 	r := gin.Default()
 	router = r // set global variable
 
@@ -36,14 +38,14 @@ func initRoutingScheme() {
 	group_v1 := r.Group("api/v1/maps")
 	{
 		group_v1.GET("/", func(c *gin.Context) {
-			c.IndentedJSON(http.StatusOK, getAllMapsFromDB())
+			c.IndentedJSON(http.StatusOK, model.GetAllMapsFromDB())
 		})
 		group_v1.GET("/:id", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
 			if err != nil {
 				c.String(http.StatusNotAcceptable, err.Error())
 			}
-			c.IndentedJSON(http.StatusOK, getSingleMapFromDB(id))
+			c.IndentedJSON(http.StatusOK, model.GetSingleMapFromDB(id))
 		})
 	}
 
@@ -61,7 +63,7 @@ func initRoutingScheme() {
 
 			c.HTML(http.StatusOK, "singlemap", gin.H{
 				"title":   "Single map",
-				"details": getSingleMapFromDB(id),
+				"details": model.GetSingleMapFromDB(id),
 			})
 		})
 	}
@@ -69,7 +71,7 @@ func initRoutingScheme() {
 }
 
 // serve the app at ipaddr
-func serveRouter(ipaddr string) {
+func ServeRouter(ipaddr string) {
 	router.Run(ipaddr)
 }
 
@@ -77,6 +79,6 @@ func serveRouter(ipaddr string) {
 func routingToAllMaps(c *gin.Context) {
 	c.HTML(http.StatusOK, "allmaps", gin.H{
 		"title": "Maps",
-		"maps":  getAllMapsFromDB(),
+		"maps":  model.GetAllMapsFromDB(),
 	})
 }
