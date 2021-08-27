@@ -12,8 +12,8 @@ func main() {
 		Name: "mapinfo",
 		Commands: []*cli.Command{
 			{
-				Name:  "load_maps_from_json",
-				Usage: "import maps into database from a json file",
+				Name:  "load_default_maps",
+				Usage: "accept a json file and load it into database",
 				Action: func(c *cli.Context) error {
 					insertDefaultMapsToDB()
 					return nil

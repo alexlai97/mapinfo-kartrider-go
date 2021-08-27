@@ -1,5 +1,4 @@
 .vscode/
 tmp/
-*.sqlite3
-*.test
+instance/
 mapinfo-kartrider
