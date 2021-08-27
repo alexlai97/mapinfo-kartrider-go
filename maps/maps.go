@@ -1,37 +1,20 @@
-package model
+package maps
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/alexlai97/mapinfo-kartrider/database"
+	"github.com/alexlai97/mapinfo-kartrider/model"
 )
 
 // json file for map details
 const MAPS_JSON_FILE = "./maps.json"
 
-// Maps contains [] Map
-// it is used for parse from json file
-type Maps struct {
-	Maps []Map `json:"maps"`
-}
-
-// Map contains all information for a certain map
-type Map struct {
-	ID          uint   `gorm:"primaryKey" json:"id"`
-	MapName     string `json:"mapname"`
-	KoreanName  string `json:"koreanname"`
-	ChineseName string `json:"chinesename"`
-	Difficulty  string `json:"difficulty"`
-	Tierpro     string `json:"tierpro"`
-	Tier1       string `json:"tier1"`
-	Tier2       string `json:"tier2"`
-	Tier3       string `json:"tier3"`
-	Tier4       string `json:"tier4"`
-}
-
 // construct and return Maps from a json file
-func getMapsFromJsonFile(filename string) (maps Maps) {
+func getMapsFromJsonFile(filename string) (maps model.Maps) {
 	var err error
 	jsonFile, err := os.Open(filename)
 	if err != nil {
@@ -52,16 +35,16 @@ func getMapsFromJsonFile(filename string) (maps Maps) {
 
 // insert the defail json map file into database
 func InsertDefaultMapsToDB() {
-	GetDB().AutoMigrate(&Map{})
+	database.GetDB().AutoMigrate(&model.Map{})
 	maps := getMapsFromJsonFile(MAPS_JSON_FILE)
 	for _, m := range maps.Maps {
-		GetDB().Create(&m)
+		database.GetDB().Create(&m)
 	}
 }
 
 // request DB and return list of all Map detail
-func GetAllMapsFromDB() (maps []Map) {
-	result := GetDB().Find(&maps)
+func GetAllMapsFromDB() (maps []model.Map) {
+	result := database.GetDB().Find(&maps)
 	if err := result.Error; err != nil {
 		log.Fatalln("get all maps from db failed")
 	}
@@ -69,7 +52,7 @@ func GetAllMapsFromDB() (maps []Map) {
 }
 
 // request DB and return a single Map detail
-func GetSingleMapFromDB(id int) (m Map) {
-	GetDB().First(&m, id)
+func GetSingleMapFromDB(id int) (m model.Map) {
+	database.GetDB().First(&m, id)
 	return
 }

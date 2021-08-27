@@ -1,4 +1,4 @@
-package common
+package routing
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 
 	"strconv"
 
-	"github.com/alexlai97/mapinfo-kartrider/model"
+	"github.com/alexlai97/mapinfo-kartrider/maps"
 )
 
 // pointer to gin.Engine
@@ -38,14 +38,14 @@ func InitRoutingScheme() {
 	group_v1 := r.Group("api/v1/maps")
 	{
 		group_v1.GET("/", func(c *gin.Context) {
-			c.IndentedJSON(http.StatusOK, model.GetAllMapsFromDB())
+			c.IndentedJSON(http.StatusOK, maps.GetAllMapsFromDB())
 		})
 		group_v1.GET("/:id", func(c *gin.Context) {
 			id, err := strconv.Atoi(c.Param("id"))
 			if err != nil {
 				c.String(http.StatusNotAcceptable, err.Error())
 			}
-			c.IndentedJSON(http.StatusOK, model.GetSingleMapFromDB(id))
+			c.IndentedJSON(http.StatusOK, maps.GetSingleMapFromDB(id))
 		})
 	}
 
@@ -63,7 +63,7 @@ func InitRoutingScheme() {
 
 			c.HTML(http.StatusOK, "singlemap", gin.H{
 				"title":   "Single map",
-				"details": model.GetSingleMapFromDB(id),
+				"details": maps.GetSingleMapFromDB(id),
 			})
 		})
 	}
@@ -79,6 +79,6 @@ func ServeRouter(ipaddr string) {
 func routingToAllMaps(c *gin.Context) {
 	c.HTML(http.StatusOK, "allmaps", gin.H{
 		"title": "Maps",
-		"maps":  model.GetAllMapsFromDB(),
+		"maps":  maps.GetAllMapsFromDB(),
 	})
 }

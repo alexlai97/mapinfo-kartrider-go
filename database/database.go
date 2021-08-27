@@ -1,9 +1,10 @@
-package model
+package database
 
 import (
 	"log"
 	"os"
 
+	"github.com/alexlai97/mapinfo-kartrider/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -47,8 +48,9 @@ func GetDB() *gorm.DB {
 // - connects to database
 // - updates the schema using structs
 func InitDB() {
+	// try to get database
 	database := GetDB()
+
 	// updates the schema using structs
-	database.AutoMigrate(&Map{})
-	// insert_default_maps_to_db()
+	database.AutoMigrate(&model.Map{}, &model.User{})
 }
