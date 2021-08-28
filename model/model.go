@@ -24,6 +24,6 @@ type Map struct {
 
 type User struct {
 	gorm.Model
-	Username string
-	Password string
+	Username string `form:"username" binding:"required"`
+	Password string `form:"password" binding:"required"`
 }

@@ -38,7 +38,10 @@ func InsertDefaultMapsToDB() {
 	database.GetDB().AutoMigrate(&model.Map{})
 	maps := getMapsFromJsonFile(MAPS_JSON_FILE)
 	for _, m := range maps.Maps {
-		database.GetDB().Create(&m)
+		result := database.GetDB().Create(&m)
+		if err := result.Error; err != nil {
+			log.Fatalln("could not create map: ", err.Error())
+		}
 	}
 }
 

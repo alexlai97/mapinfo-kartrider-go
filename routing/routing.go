@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/multitemplate"
@@ -9,6 +10,8 @@ import (
 	"strconv"
 
 	"github.com/alexlai97/mapinfo-kartrider/maps"
+	"github.com/alexlai97/mapinfo-kartrider/model"
+	"github.com/alexlai97/mapinfo-kartrider/users"
 )
 
 // pointer to gin.Engine
@@ -77,6 +80,21 @@ func InitRoutingScheme() {
 		})
 		group_auth.GET("/login", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "login", gin.H{})
+		})
+		group_auth.POST("/register", func(c *gin.Context) {
+			var err error
+			request := model.User{}
+			err = c.ShouldBind(&request)
+			if err != nil {
+				log.Println("register c.ShouldBind failed", err.Error())
+			}
+
+			err = users.RegisterUser(request)
+			if err != nil {
+				log.Println("register User failed", err.Error())
+			}
+
+			c.Redirect(http.StatusFound, "/auth/login")
 		})
 	}
 }
