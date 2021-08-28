@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"errors"
 	"log"
 	"net/http"
 
@@ -86,8 +87,14 @@ func InitRoutingScheme() {
 			request := model.User{}
 			err = c.ShouldBind(&request)
 			if err != nil {
+				// TODO: better logging
 				log.Println("register c.ShouldBind failed", err.Error())
 			}
+			// TODO: store hash of password
+
+			// TODO:
+			// if user exists, "username exists"
+			// if empty form return "username/password needed"
 
 			err = users.RegisterUser(request)
 			if err != nil {
@@ -95,6 +102,31 @@ func InitRoutingScheme() {
 			}
 
 			c.Redirect(http.StatusFound, "/auth/login")
+		})
+		group_auth.POST("/login", func(c *gin.Context) {
+			var err error
+			request := model.User{}
+			err = c.ShouldBind(&request)
+			if err != nil {
+				log.Println("login c.ShouldBind failed", err.Error())
+			}
+
+			user := users.GetUserByUsername(request.Username)
+			if request.Password != user.Password {
+				err = errors.New("Incorrect Password")
+			}
+
+			// TODO: save user in session
+
+			if err != nil {
+				log.Println(err.Error())
+				// TODO: flash error
+			} else {
+				c.Redirect(http.StatusFound, "/maps")
+			}
+		})
+		group_auth.Any("/logout", func(c *gin.Context) {
+			// TODO: remove user from session
 		})
 	}
 }
