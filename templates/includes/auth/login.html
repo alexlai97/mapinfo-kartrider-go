@@ -1,0 +1,17 @@
+{{ define "header" }} 
+    <h1>{{ block "title" . }} {{ end }}</h1>
+{{ end }}
+
+{{ define "title" }}
+Log in
+{{ end }}
+
+{{ define "content" }}
+  <form method="post">
+    <label for="username">Username</label>
+    <input name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+    <input type="submit" value="Log in">
+  </form>
+{{ end}}

@@ -1,11 +1,13 @@
+{{ define "header" }} 
+    <h1>{{ block "title" . }} {{ end }}</h1>
+{{ end }}
+
 {{ define "title" }}
 maps
 {{ end }}
 
+
 {{ define "content" }}
-	<h1>
-		{{ .title }}
-	</h1>
 	<table>
     <tr>
         <th>id</th>

@@ -1,8 +1,11 @@
+{{ define "header" }} 
+    <h1>{{ block "title" . }} {{ end }}</h1>
+{{ end }}
+
 {{ define "title" }}
 singlemap
 {{ end }}
 
 {{ define "content" }}
-	<h1> singlemap</h1>
 	{{ .details }}
 {{ end }}

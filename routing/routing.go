@@ -18,8 +18,10 @@ var router *gin.Engine
 func loadTemplates(templateDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 
-	r.AddFromFiles("allmaps", templateDir+"/layouts/base.html", templateDir+"/includes/maps.html")
-	r.AddFromFiles("singlemap", templateDir+"/layouts/base.html", templateDir+"/includes/singlemap.html")
+	r.AddFromFiles("allmaps", templateDir+"/layouts/base.html", templateDir+"/includes/maps/maps.html")
+	r.AddFromFiles("singlemap", templateDir+"/layouts/base.html", templateDir+"/includes/maps/singlemap.html")
+	r.AddFromFiles("login", templateDir+"/layouts/base.html", templateDir+"/includes/auth/login.html")
+	r.AddFromFiles("register", templateDir+"/layouts/base.html", templateDir+"/includes/auth/register.html")
 
 	return r
 }
@@ -34,7 +36,7 @@ func InitRoutingScheme() {
 
 	r.Static("/assets", "./assets")
 
-	// json
+	// "api/v1/maps" json
 	group_v1 := r.Group("api/v1/maps")
 	{
 		group_v1.GET("/", func(c *gin.Context) {
@@ -49,7 +51,7 @@ func InitRoutingScheme() {
 		})
 	}
 
-	// html
+	// "/" and "/maps" html
 	r.GET("/", routingToAllMaps)
 	group_map := r.Group("maps")
 	{
@@ -68,6 +70,15 @@ func InitRoutingScheme() {
 		})
 	}
 
+	group_auth := r.Group("auth")
+	{
+		group_auth.GET("/register", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "register", gin.H{})
+		})
+		group_auth.GET("/login", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "login", gin.H{})
+		})
+	}
 }
 
 // serve the app at ipaddr
@@ -76,6 +87,7 @@ func ServeRouter(ipaddr string) {
 }
 
 // show all maps
+// reuse code
 func routingToAllMaps(c *gin.Context) {
 	c.HTML(http.StatusOK, "allmaps", gin.H{
 		"title": "Maps",
