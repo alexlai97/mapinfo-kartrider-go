@@ -28,6 +28,7 @@ curl localhost:8080/api/v1/maps/3
 - user can store their record
 
 ## big
+- deploy the app somewhere
 - multiple users at the same time
 - support filtering at "/maps" like "Easy", 
 - cache maps on client
