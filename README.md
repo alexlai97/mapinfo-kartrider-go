@@ -10,7 +10,11 @@ make build
 ./mapinfo-kartrider load_default_maps
 ./mapinfo-kartrider serve
 
-# Open your browser at localhost:8080
+# Open your browser at localhost:8080, or using curl
+curl localhost:8080/maps
+curl localhost:8080/api/v1/maps/
+curl localhost:8080/maps/2
+curl localhost:8080/api/v1/maps/3
 ```
 
 # What can you do so far?
