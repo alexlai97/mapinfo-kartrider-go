@@ -2,3 +2,4 @@
 tmp/
 instance/
 mapinfo-kartrider
+.air.toml
