@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 
 	"strconv"
@@ -34,6 +36,9 @@ func loadTemplates(templateDir string) multitemplate.Renderer {
 func InitRoutingScheme() {
 	r := gin.Default()
 	router = r // set global variable
+
+	store := memstore.NewStore([]byte("secret"))
+	r.Use(sessions.Sessions("mysession", store))
 
 	// load templates
 	r.HTMLRender = loadTemplates("./templates")
@@ -67,9 +72,12 @@ func InitRoutingScheme() {
 				c.String(http.StatusNotAcceptable, err.Error())
 			}
 
+			user, loggedin := users.GetLoggedInUser(c)
+			log.Println("username: ", user.Username, "loggedin?: ", loggedin)
 			c.HTML(http.StatusOK, "singlemap", gin.H{
-				"title":   "Single map",
-				"details": maps.GetSingleMapFromDB(id),
+				"loggedin": loggedin,
+				"username": user.Username,
+				"details":  maps.GetSingleMapFromDB(id),
 			})
 		})
 	}
@@ -113,20 +121,28 @@ func InitRoutingScheme() {
 
 			user := users.GetUserByUsername(request.Username)
 			if request.Password != user.Password {
-				err = errors.New("Incorrect Password")
+				err = errors.New("incorrect password")
 			}
-
-			// TODO: save user in session
 
 			if err != nil {
 				log.Println(err.Error())
 				// TODO: flash error
 			} else {
+				session := sessions.Default(c)
+				session.Clear()
+				session.Set("account_id", user.ID)
+				session.Save()
+				log.Println("session saved accound_id: ", user.ID)
+				user, loggedin := users.GetLoggedInUser(c)
+				log.Println("username: ", user.Username, "loggedin?: ", loggedin)
 				c.Redirect(http.StatusFound, "/maps")
 			}
 		})
 		group_auth.Any("/logout", func(c *gin.Context) {
-			// TODO: remove user from session
+			session := sessions.Default(c)
+			session.Delete("account_id")
+			session.Save()
+			c.Redirect(http.StatusFound, "/maps")
 		})
 	}
 }
@@ -139,8 +155,11 @@ func ServeRouter(ipaddr string) {
 // show all maps
 // reuse code
 func routingToAllMaps(c *gin.Context) {
+	user, loggedin := users.GetLoggedInUser(c)
+	log.Println("username: ", user.Username, "loggedin?: ", loggedin)
 	c.HTML(http.StatusOK, "allmaps", gin.H{
-		"title": "Maps",
-		"maps":  maps.GetAllMapsFromDB(),
+		"loggedin": loggedin,
+		"username": user.Username,
+		"maps":     maps.GetAllMapsFromDB(),
 	})
 }

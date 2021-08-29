@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/gin-contrib/multitemplate v0.0.0-20210428235909-8a2f6dd269a0
+	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.7.4
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/urfave/cli/v2 v2.3.0
