@@ -13,6 +13,10 @@ make build
 # Open your browser at localhost:8080
 ```
 
+# What can you do so far?
+1. You can register, and login, then logout. :)
+2. You can check the tier table at "localhost:8080/maps" and "localhost:8080/api/v1/maps"
+
 # TODO
 ## small
 - flash error
