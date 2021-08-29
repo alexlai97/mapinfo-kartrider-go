@@ -15,6 +15,7 @@ import (
 	"github.com/alexlai97/mapinfo-kartrider/maps"
 	"github.com/alexlai97/mapinfo-kartrider/model"
 	"github.com/alexlai97/mapinfo-kartrider/users"
+	"github.com/alexlai97/mapinfo-kartrider/utils"
 )
 
 // pointer to gin.Engine
@@ -98,7 +99,12 @@ func InitRoutingScheme() {
 				// TODO: better logging
 				log.Println("register c.ShouldBind failed", err.Error())
 			}
-			// TODO: store hash of password
+			// store hash of password
+			hash_pass, err := utils.HashPassword(request.Password)
+			if err != nil {
+				log.Println("HashPassword failed", err.Error())
+			}
+			request.Password = hash_pass
 
 			// TODO:
 			// if user exists, "username exists"
@@ -120,13 +126,14 @@ func InitRoutingScheme() {
 			}
 
 			user := users.GetUserByUsername(request.Username)
-			if request.Password != user.Password {
+			if !utils.CheckPasswordHash(request.Password, user.Password) {
 				err = errors.New("incorrect password")
 			}
 
 			if err != nil {
 				log.Println(err.Error())
 				// TODO: flash error
+				c.Redirect(http.StatusFound, "/auth/login")
 			} else {
 				session := sessions.Default(c)
 				session.Clear()
